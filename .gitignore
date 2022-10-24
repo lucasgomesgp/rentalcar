@@ -53,3 +53,10 @@ buck-out/
 .expo/
 web-build/
 dist/
+
+.env
+.env.local
+
+# Firebase
+google-services.json
+GoogleService-Info.plist
