@@ -50,16 +50,14 @@ export function Payment() {
   const { payment } = useSelector(
     (state: RootState) => state.carChoosedReducer
   );
-  const start = payment?.rentalDays[0];
-  const end = payment.rentalDays[payment?.rentalDays?.length - 1];
 
   const [valueFormattedWithSymbol] = formatCurrency({
     amount: carSendedToModal?.pricePerDay || 0,
     code: "USD",
   });
   const [datesRental, setDatesRental] = useState({
-    start: parseISO(start) || 0,
-    end: parseISO(end) || 0,
+    start: parseISO(payment.initialRental) || 0,
+    end: parseISO(payment.endRental) || 0,
   });
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -131,7 +129,7 @@ export function Payment() {
         </Pressable>
         <MapView
           onMapReady={() => {
-            Platform.OS === "android" ? getPermissionLocation : "";
+            Platform.OS === "android" ? getPermissionLocation() : "";
           }}
           initialRegion={{
             latitude: 37.77026837819554,
@@ -139,9 +137,8 @@ export function Payment() {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          mapType="mutedStandard"
-          showsUserLocation={true}
           style={{ width: width, height: 300 }}
+          showsUserLocation={true}
           loadingEnabled={true}
         >
           <Marker
@@ -330,7 +327,7 @@ export function Payment() {
               onPress={handleSubmit(onSubmit)}
             >
               <Text color="white" fontSize={20}>
-                Pay |{valueFormattedWithSymbol || 0} /day
+                Pay ${payment.total || 0}
               </Text>
             </Button>
           </KeyboardAvoidingView>

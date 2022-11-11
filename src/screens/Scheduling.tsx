@@ -18,6 +18,15 @@ import {
 import { getStatusBarHeight } from "react-native-iphone-x-helper";
 import { BackBtn } from "../components/BackBtn";
 
+interface MarkedDates {
+  [object: string]: {
+    startingDay?: boolean;
+    color: string;
+    endingDay?: boolean;
+    selected?: boolean;
+  };
+}
+
 export function Scheduling() {
   const [daysSelected, setDaysSelected] = useState<Array<string>>([]);
   const [datesMarked, setDatesMarked] = useState({});
@@ -43,10 +52,25 @@ export function Scheduling() {
   LocaleConfig.defaultLocale = "en";
 
   function markedDates() {
-    const markedDatesFormatted = {};
-    daysSelected.forEach((date) => {
-      markedDatesFormatted[date] = { selected: true };
-    });
+    const markedDatesFormatted: MarkedDates = {
+      [daysSelected[0]]: {
+        startingDay: true,
+        color: "#f9864ab5",
+      },
+    };
+    const lastDayOfDates = daysSelected[daysSelected.length - 1];
+    // for (let i = initialDay; i <= endDay; i++) {
+    //   if (i !== initialDay && i !== endDay) {
+    //     markedDatesFormatted[`${customDate[0]}-${customDate[1]}-${i}`] = {
+    //       selected: true,
+    //       color: "#f9864ab5",
+    //     };
+    //   }
+    // }
+    markedDatesFormatted[lastDayOfDates] = {
+      endingDay: true,
+      color: "#f9864ab5",
+    };
     setDatesMarked(markedDatesFormatted);
   }
 
@@ -65,6 +89,11 @@ export function Scheduling() {
     } else if (!hourOfPickUp || !hourOfReturn) {
       return Alert.alert("Required fields", "Fill in the times to continue.");
     } else {
+      const initialDay = daysSelected[0];
+      const endDay = daysSelected[1];
+      const daysRental = Math.abs(
+        parseInt(initialDay.split("-")[2]) - parseInt(endDay.split("-")[2])
+      );
       dispatch(
         addCarToPayment({
           car: {
@@ -72,9 +101,11 @@ export function Scheduling() {
             withDriver: toggleWithDriver,
           },
           payment: {
-            choosenDays: daysSelected.length,
-            total: carSendedToModal.pricePerDay * daysSelected.length,
-            rentalDays: daysSelected,
+            choosenDays: markedDates.length,
+            total: carSendedToModal.pricePerDay * daysRental,
+            rentalDays: daysRental,
+            initialRental: initialDay,
+            endRental: endDay,
           },
         })
       );

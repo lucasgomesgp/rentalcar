@@ -27,14 +27,18 @@ import { ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { getStatusBarHeight } from "react-native-iphone-x-helper";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigation } from "@react-navigation/native";
 
 export function Home() {
   const [cars, setCars] = useState<Array<CarTypes>>([]);
   const [brands, setBrands] = useState<Array<BrandTypes>>([]);
   const [brandChoosed, setBrandChoosed] = useState("");
   const [fetchIsLoading, setFetchIsLoading] = useState(false);
+  const { user } = useAuth();
   const { modalIsOpen } = useSelector((state: RootState) => state.modalReducer);
-
+  const navigation = useNavigation();
+  
   async function handleGetDataFromServer() {
     setFetchIsLoading(true);
     const carsFetched = brandChoosed
@@ -74,7 +78,15 @@ export function Home() {
               <ArrowDownSm />
             </Box>
           </Box>
-          <Image source={require("../assets/user.png")} alt="User avatar" />
+          <Pressable onPress={() => {navigation.navigate("User")}}>
+            <Image
+              source={{ uri: user.photo }}
+              alt="User avatar"
+              width={46}
+              height={45}
+              borderRadius={10}
+            />
+          </Pressable>
         </HStack>
         <Text fontSize={32} px={5} mt={4} color="gray.500">
           Find your favourite vechicle.

@@ -13,10 +13,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import { store } from "./src/app/store";
 import { ActivityIndicator } from "react-native";
-
+import { UserProvider } from "./src/hooks/useAuth";
 
 export default function App() {
- 
   const [fontsLoaded] = useFonts({
     Inter_700Bold,
     Inter_500Medium,
@@ -24,17 +23,19 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <ActivityIndicator size={32} />
+    return <ActivityIndicator size={32} />;
   }
 
   return (
-    <Provider store={store}>
+    <UserProvider>
+      <Provider store={store}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <NativeBaseProvider theme={THEME}>
-            <StatusBar style="auto" translucent />
+            <StatusBar style="light" translucent />
             <AppRoutes />
           </NativeBaseProvider>
         </GestureHandlerRootView>
-    </Provider>
+      </Provider>
+    </UserProvider>
   );
 }

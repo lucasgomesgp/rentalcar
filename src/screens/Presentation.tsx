@@ -1,17 +1,20 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, Image, Text, VStack } from "native-base";
+import { Dimensions } from "react-native";
 
 export function Presentation() {
   const navigation = useNavigation();
+  const {height} = Dimensions.get("screen");
   return (
     <VStack flex={1} alignItems="center" justifyContent="space-between">
       <Image
         source={require("../assets/car.png")}
-        h="full"
+        h={height}
         w="full"
         position="absolute"
         top={0}
         alt="Car"
+        flex={1}
       />
       <Text
         fontSize={48}

@@ -17,6 +17,8 @@ export interface CarChoosed {
     rentalDays: Array<string>;
     chosenDays: number;
     total: number;
+    initialRental: string;
+    endRental: string;
   };
 }
 
@@ -28,6 +30,8 @@ const initialState: CarChoosed = {
     chosenDays: 0,
     total: 0,
     rentalDays: [],
+    initialRental: "",
+    endRental: "",
   },
 };
 
@@ -59,6 +63,8 @@ export const carChoosedSlice = createSlice({
         chosenDays: 0,
         total: 0,
         rentalDays: [],
+        endRental: "",
+        initialRental: "",
       };
     },
   },
